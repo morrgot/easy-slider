@@ -35,13 +35,13 @@ var Slider = (function(){
 			valueTotal = (valueMax - valueMin),
 			currentValue = 0,
 			
-			_timeDownUp = null,
-			
 			options = {
 				value: valueMin,
 				max: valueMax,
 				min: valueMin,
-				onSlide: null
+				onSlide: null,
+				onSlideStart: null,
+				onSlideStop: null
 			};
 			
 		this.getOptions = function(){

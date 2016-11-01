@@ -1,5 +1,5 @@
 var log = console.log.bind(console);
-var Slider = (function(){
+var EasySlider = (function(document){
 
 	String.prototype.ucFirst = function() {
 		var str = this;
@@ -9,7 +9,7 @@ var Slider = (function(){
 		return str;
 	};
 		
-	Slider.prototype.setOptions = function(opts){
+	EasySlider.prototype.setOptions = function(opts){
 		if(typeof opts === 'object'){
 			var options = this.getOptions();
 			for (var name in opts){
@@ -20,15 +20,16 @@ var Slider = (function(){
 		return this;
 	};
 	
-	return Slider;
+	return EasySlider;
 	
-	function Slider(container, opts){	
+	function EasySlider(container, opts){
 		var _slider = this,
 			handle_element = container.querySelector('.slider-handle'),
 			value_element = container.querySelector('.slider-value'),
 			range_element = container.querySelector('.slider-range'),
 			
 			pixelTotal = range_element.clientWidth,
+			offsetLeft = range_element.getBoundingClientRect().left,
 		
 			valueMax = 100,
 			valueMin = 0,
@@ -99,25 +100,13 @@ var Slider = (function(){
 			log('up');
 		}
 		
-		function mouseMove (event) {	
+		function mouseMove (event) {
 			var x = event.pageX,
 				norm = _normalizeX(x);
-				
-			if(norm.value != currentValue){							
+
+			if (norm.value != currentValue) {
 				slide(norm);
 			}
-		}
-		
-		function slide(norm){
-			currentValue = norm.value;
-			
-			_moveSlider(norm.percent);
-			_trigger('slide', [norm.value, norm.percent]);
-		}
-		
-		function _moveSlider(percent){			
-			handle_element.style.left = percent + '%';
-			value_element.style.width = percent + '%';
 		}
 		
 		function _normalizeX( x ) {
@@ -125,7 +114,7 @@ var Slider = (function(){
 				percentMouse,
 				valueMouse;
 			
-			pixelMouse = x - range_element.getBoundingClientRect().left;
+			pixelMouse = x - offsetLeft; // to fix with onResize event handling
 			
 			percentMouse = ( pixelMouse / pixelTotal );
 			if ( percentMouse > 1 ) {
@@ -138,6 +127,18 @@ var Slider = (function(){
 			percentMouse *= 100;
 
 			return {value: toFixed(valueMouse), percent: toFixed(percentMouse)};
+		}
+
+		function slide(norm){
+			currentValue = norm.value;
+
+			_moveSlider(norm.percent);
+			_trigger('slide', [norm.value, norm.percent]);
+		}
+
+		function _moveSlider(percent){
+			handle_element.style.left = percent + '%';
+			value_element.style.width = percent + '%';
 		}
 		
 		function _prepareValue(val){
@@ -185,4 +186,4 @@ var Slider = (function(){
 	function toFixed(n){
 		return parseFloat( n.toFixed( 3 ) );
 	}
-})();
+})(document);

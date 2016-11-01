@@ -10,7 +10,7 @@
     margin: 1px auto;
 
     position: relative;
-    overflow: hidden;
+
 	padding: 0 10px;
 }
 
@@ -40,19 +40,40 @@
 	margin-left: -5px;
 	
 }
+
+#hint{
+	background-color: powderblue;
+	height: 20px;
+	left: -5px;
+	min-width: 20px;
+	position: absolute;
+	top: -22px;
+	z-index: 10;
+	border-radius: 3px;
+}
 </style>	
 </head>
-<body style="text-align: center;">
+<body style="text-align: center; padding-top: 30px;">
 <div class="slider-container">
 	<div class="slider-range">
 		<div class="slider-value"></div>
-		<div class="slider-handle"></div>
+		<div class="slider-handle">
+			<div id="hint">11</div>
+		</div>
 	</div>
 </div>
 <hr>
 <p id='p'></p>
 <script>
-	var slider = new Slider(document.getElementsByClassName('slider-container').item(0), {a: 1, value: 34, onSlideStart: function(){console.log(arguments);}});
+	var hint_el = document.getElementById('hint');
+	var slider = new EasySlider(document.getElementsByClassName('slider-container').item(0), {
+		a: 1,
+		value: 34,
+		onSlide: function (v) {
+			hint_el.innerHTML = v;
+		}
+
+	});
 </script>
 </body>
 </html>
